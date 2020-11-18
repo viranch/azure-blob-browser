@@ -1,0 +1,68 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head id="topHead">
+    <title data-bind="text: 'Index of /' + container()">Index</title>
+    <script src="assets/jquery-1.12.4.min.js"></script>
+    <script src="assets/knockout-3.1.0.js"></script>
+    <link rel="stylesheet" href="theme/style.css" type="text/css" />
+    <script src="script.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+</head>
+<body>
+    <div class="wrapper">
+        <!-- we open the `wrapper` element here, but close it in the `footer.html` file -->
+        <table id="indexlist">
+            <tr class="indexhead">
+                <th class="indexcolicon"><img src="theme/icons/blank.png" alt="[ICO]" /></th>
+                <th class="indexcolname">Name</th>
+                <th class="indexcollastmod">Last modified</th>
+                <th class="indexcolsize">Size</th>
+            </tr>
+            <tr class="parent" data-bind="if: parent_dir().length > 1">
+                <td class="indexcolicon">
+                    <a data-bind="attr: { href: parent_dir }"><img src="theme/icons/folder-home.png" alt="[PARENTDIR]" /></a>
+                </td>
+                <td class="indexcolname"><a data-bind="attr: { href: parent_dir }">Parent Directory</a></td>
+                <td class="indexcollastmod">&nbsp;</td>
+                <td class="indexcolsize">  - </td>
+            </tr>
+            <!-- ko foreach: folders -->
+                <tr>
+                    <td class="indexcolicon">
+                        <a data-bind="attr: { href: link }">
+                            <img src="theme/icons/folder.png" alt="[DIR]" />
+                        </a>
+                    </td>
+                    <td class="indexcolname">
+                        <a data-bind="attr: { href: link }, text: name"></a>
+                    </td>
+                    <td class="indexcollastmod" data-bind="text: last_modified"></td>
+                    <td class="indexcolsize" data-bind="text: size"></td>
+                </tr>
+            <!-- /ko -->
+            <!-- ko foreach: files -->
+                <tr>
+                    <td class="indexcolicon">
+                        <a data-bind="attr: { href: link }" target="_blank">
+                            <img data-bind="attr: { src: icon }" alt="[   ]" />
+                        </a>
+                    </td>
+                    <td class="indexcolname">
+                        <a data-bind="attr: { href: link }, text: name" target="_blank"></a>
+                    </td>
+                    <td class="indexcollastmod" data-bind="text: last_modified"></td>
+                    <td class="indexcolsize" data-bind="text: size"></td>
+                </tr>
+            <!-- /ko -->
+        </table>
+
+        <div class="block"></div><!--/.postlisting-->
+
+    </div><!--/.wrapper-->
+
+    <div class="footer">
+        Apaxy by <a href="https://twitter.com/adamwhitcroft">@adamwhitcroft</a>
+    </div><!--/.footer-->
+</body>
+</html>
