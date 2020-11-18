@@ -6,7 +6,7 @@ var ko_data = {
 };
 var ko_head_data = { container: ko_data.container };
 
-var blobs;
+var blobs = [];
 var container;
 
 var icon_extensions = {
@@ -102,19 +102,30 @@ function format_date(date) {
     return `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
 }
 
-function load_files() {
+function load_files(marker) {
     container = document.location.hash.slice(1).split('/')[1];
     ko_data.container(container);
 
-    $.ajax(`/${container}?restype=container&comp=list`).done(function(data) {
-        blobs = Array.from(data.getElementsByTagName("Blob")).map((blob) => Object({
-            name: node_val(blob, "Name"),
-            url: node_val(blob, "Url"),
-            last_modified: (new Date(node_val(blob, "Properties/Last-Modified"))),
-            size: parseInt(node_val(blob, "Properties/Content-Length")),
-            type: node_val(blob, "Properties/Content-Type")
-        }));
-        navigate();
+    var list_uri = `/${container}?restype=container&comp=list`;
+    if (marker != undefined) {
+        list_uri += `&marker=${marker}`;
+    }
+
+    $.ajax(list_uri).done(function(data) {
+        blobs = blobs.concat(Array.from(data.getElementsByTagName("Blob")));
+        var marker = node_val(data, "EnumerationResults/NextMarker");
+        if (marker != "") {
+            load_files(marker);
+        } else {
+            blobs = blobs.map((blob) => Object({
+                name: node_val(blob, "Name"),
+                url: node_val(blob, "Url"),
+                last_modified: (new Date(node_val(blob, "Properties/Last-Modified"))),
+                size: parseInt(node_val(blob, "Properties/Content-Length")),
+                type: node_val(blob, "Properties/Content-Type")
+            }));
+            navigate();
+        }
     });
 }
 
