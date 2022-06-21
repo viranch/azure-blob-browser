@@ -99,7 +99,7 @@ function format_size(bytes) {
 };
 
 function format_date(date) {
-    return `${date.getUTCFullYear()}-${date.getUTCMonth()}-${date.getUTCDate()} ${date.getUTCHours()}:${date.getUTCMinutes()}`;
+    return date.toISOString().split(':', 2).join(':').replace('T', ' ');
 }
 
 function load_files(marker) {
